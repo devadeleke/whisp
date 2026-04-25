@@ -1,6 +1,8 @@
 import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
 import { generateTokenAndSetCookie } from '../lib/utils.js';
+import { sendWelcomeEmail } from '../email/emailHandler.js';
+import { ENV } from '../lib/env.js';
 
 export const signup = async (req, res) => {
     const { fullname, email, password } = req.body;
@@ -35,6 +37,12 @@ export const signup = async (req, res) => {
                 email: newUser.email,
                 profilePicture: newUser.profilePicture
             });
+            
+            try {
+                await sendWelcomeEmail(newUser.email, newUser.fullname, ENV.CLIENT_URL);
+            } catch (error) {
+                console.error('Error sending welcome email:', error);
+            }
         } else {
             res.status(400).json({ message: 'Invalid user data' });
         }
@@ -43,3 +51,4 @@ export const signup = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+

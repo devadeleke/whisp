@@ -1,16 +1,15 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import path from 'path';
-import dns from 'node:dns';
+import dns from'node:dns';
 
 import authRoutes from './routes/auth.route.js';
 import { connectDB } from './lib/db.js';
+import { ENV } from './lib/env.js';
 
-dotenv.config();
 // Set custom DNS servers to avoid potential DNS resolution issues (force Node.js itself to use Google’s DNS servers instead of the system’s default)
 // Only force custom DNS if the environment variable is explicitly set to 'true'
-if (process.env.FORCE_CUSTOM_DNS === 'true') {
-  dns.setServers(['8.8.8.8', '8.8.4.4']);
+if (ENV.FORCE_CUSTOM_DNS === 'true') {
+  dns.setServers(['1.1.1.1', '8.8.8.8']);
   console.log('Using custom DNS resolvers (Google)');
 } else {
   // By default, Node.js will use the OS resolver (recommended for VPCs/Cloud)
@@ -20,14 +19,14 @@ if (process.env.FORCE_CUSTOM_DNS === 'true') {
 const app = express();
 const __dirname = path.resolve();
 
-const PORT = process.env.PORT || 3000;
+const PORT = ENV.PORT || 3000;
 
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 
 // make ready for production
-if (process.env.NODE_ENV === 'production') {
+if (ENV.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
     app.get('/{*any}', (req, res) => {
