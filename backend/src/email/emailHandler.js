@@ -10,10 +10,15 @@ export const sendWelcomeEmail = async (email, name, clientUrl) => {
         category: 'welcome-email'
     });
 
+    //Avoid logging full provider payloads in auth-adjacent flows. Log only relevant information for debugging and monitoring purposes.
     if (error) {
-        console.error('Error sending welcome email:', error);
+        console.error('Error sending welcome email', {
+            message: error?.message || 'unknown',
+        });
         throw new Error('Failed to send welcome email');
     } 
     
-    console.log('Welcome email sent successfully:', data);
+    console.log('Welcome email sent successfully', {
+        id: data?.id,
+    });
 };

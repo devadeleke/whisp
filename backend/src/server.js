@@ -10,7 +10,7 @@ import { ENV } from './lib/env.js';
 // Only force custom DNS if the environment variable is explicitly set to 'true'
 if (ENV.FORCE_CUSTOM_DNS === 'true') {
   dns.setServers(['1.1.1.1', '8.8.8.8']);
-  console.log('Using custom DNS resolvers (Google)');
+  console.log('Using custom DNS resolvers (Cloudflare + Google)');
 } else {
   // By default, Node.js will use the OS resolver (recommended for VPCs/Cloud)
   console.log('Using default system DNS resolver');
