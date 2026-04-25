@@ -1,6 +1,11 @@
 import jwt from 'jsonwebtoken';
 
 export const generateTokenAndSetCookie = (userId, res) => {
+    //Add explicit guard for JWT_SECRET_KEY before calling jwt.sign.
+    if (!process.env.JWT_SECRET_KEY) {
+        throw new Error('JWT_SECRET_KEY is not configured');
+    }
+
     const token = jwt.sign({userId}, process.env.JWT_SECRET_KEY, {
         expiresIn: '7d'
     })
