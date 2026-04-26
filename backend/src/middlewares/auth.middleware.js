@@ -17,8 +17,8 @@ export const protectRoute = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.log("Error in protectRoute middleware:", error);
-        res.status(500).json({ message: "Internal server error" });
+        //console.log("Error in protectRoute middleware:", error);
+        //res.status(500).json({ message: "Internal server error" });
 
         //Handle specific JWT errors separately for better clarity in responses (Return 401 for invalid/expired JWTs instead of 500.)
         if (error?.name === 'TokenExpiredError' || error?.name === 'JsonWebTokenError') {
