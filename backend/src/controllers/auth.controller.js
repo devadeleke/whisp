@@ -95,8 +95,11 @@ export const updateProfile = async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(
             userId, 
             { profilePicture: uploadResponse.secure_url }, 
-            { new: true }
-        );
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!updatedUser) return res.status(404).json({ message: 'User not found' });
+        
         res.status(200).json({ 
             success: true, 
             message: 'Profile updated successfully', 
