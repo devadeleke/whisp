@@ -52,3 +52,34 @@ export const signup = async (req, res) => {
     }
 }
 
+export const login = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        if(!email || !password) return res.status(400).json({ success: false, message: "All fields should be provided..."})
+        
+        const user = await User.findOne({ email });
+        if(!user) return res.status(400).json({ success: false, message: "Invalid credentials..."})
+
+        const isPasswordValid = await bcryptjs.compare(password, user.password)
+        if(!isPasswordValid) return res.status(400).json({success: false, message: "Invalid credentials..."})
+
+        generateTokenAndSetCookie(user._id, res);
+
+        res.status(201).json({
+                sussess: true,
+                message: "User logged in successfully!",
+                user: {
+                    ...user.doc,
+                    password: undefined
+                }
+            });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+export const logout = async (req, res) => {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ succes: true, message: "User successfully logged out."})
+}
