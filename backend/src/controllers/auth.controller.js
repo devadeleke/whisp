@@ -65,21 +65,19 @@ export const login = async (req, res) => {
 
         generateTokenAndSetCookie(user._id, res);
 
-        res.status(201).json({
-                sussess: true,
-                message: "User logged in successfully!",
-                user: {
-                    ...user.doc,
-                    password: undefined
-                }
-            });
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            profilePic: user.profilePic,
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
-export const logout = async (req, res) => {
+export const logout = async (_, res) => {
     res.cookie("jwt", "", { maxAge: 0 });
-    res.status(200).json({ succes: true, message: "User successfully logged out."})
+    res.status(200).json({ success: true, message: "User successfully logged out."})
 }
