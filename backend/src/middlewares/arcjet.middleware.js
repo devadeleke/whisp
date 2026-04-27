@@ -28,7 +28,13 @@ export const arcjetProtection = async (req, res, next) => {
 
         next()
     } catch (error) {
-        console.log("Arcjet Peotection Error: ", error)
-        next()
+        //console.log("Arcjet Peotection Error: ", error)
+        //next()
+        
+        // Critical: Fail-open behavior bypasses all security on errors.
+        console.error("Arcjet Protection Error:", error);
+        return res.status(503).json({
+            message: "Security service unavailable. Please try again later."
+        });
     }
 }

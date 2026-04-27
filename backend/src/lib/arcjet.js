@@ -3,9 +3,6 @@ import { isSpoofedBot } from "@arcjet/inspect";
 import express from "express";
 import { ENV } from "./env.js";
 
-const app = express();
-const port = ENV.PORT;
-
 const aj = arcjet({
   // Get your site key from https://app.arcjet.com and set it as an environment
   // variable rather than hard coding.
@@ -28,8 +25,12 @@ const aj = arcjet({
     // Create a sliding window rate limit. Other algorithms are supported.
     slidingWindow({
       mode: "LIVE",
-      max: 100, // Max 100 requests 
-      interval: 6, // Refill every 6 seconds
+      //max: 100, // Max 100 requests 
+      //interval: 6, // Refill every 6 seconds
+
+      // Apply stricter rate limiting for authentication endpoints to prevent brute-force attacks.
+      max: 10, // Max 10 requests
+      interval: 60, // Per 60 seconds (1 minute)
     }),
   ],
 });
