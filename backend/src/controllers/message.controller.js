@@ -26,9 +26,9 @@ export const getChatPartners = async (req, res) => {
             ]
         });
 
-        const chatPartnersIdsn= [
+        const chatPartnersIds= [
             ...new Set(messages.map(
-                msg => msg.senderId.toString() === loggedInUserId 
+                msg => msg.senderId.toString() === loggedInUserId.toString()
                 ? msg.receiverId.toString() 
                 : msg.senderId.toString()))
         ]
@@ -47,7 +47,7 @@ export const getChatPartners = async (req, res) => {
 export const getMessagesByUserId = async (req, res) => {
     try {
         const myId = req.user._id;
-        const {id:userToChatId} = req.params.id;
+        const {id:userToChatId} = req.params;
 
         const messages = await Message.find({
             $or: [
@@ -73,15 +73,15 @@ export const sendMessage = async (req, res) => {
         if(image) {
             // upload base 64 image to cloudinary
             const uploadResponse = await cloudinary.uploader.upload(image)
-            imageUrl = cloudinary.secure_url
+            imageUrl = uploadResponse.secure_url
         }
 
-        const newMessage = {
+        const newMessage = Message.create({
             senderId,
             receiverId,
             text,
             image: imageUrl
-        }
+        })
 
         await newMessage.save()
 

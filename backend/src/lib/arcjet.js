@@ -12,7 +12,8 @@ const aj = arcjet({
     shield({ mode: "LIVE" }),
     // Create a bot detection rule
     detectBot({
-      mode: "LIVE", // Blocks requests. Use "DRY_RUN" to log only
+      //mode: "LIVE", // Blocks requests. Use "DRY_RUN" to log only
+      mode: isProduction ? "LIVE" : "DRY_RUN",
       // Block all bots except the following
       
       // Use this in production to block all bots except major search engines and other allowed categories.
@@ -23,15 +24,20 @@ const aj = arcjet({
         //"CATEGORY:MONITOR", // Uptime monitoring services
         //"CATEGORY:PREVIEW", // Link previews e.g. Slack, Discord
       //],
-      
-      // Use this during development to allow all bots but still get detection signals in your dashboard. Don't forget to switch to "LIVE" mode and set appropriate allow rules before going to production.
-      allow: [
-        "CATEGORY:SEARCH_ENGINE",
-        "CATEGORY:BROWSER",
-        "CATEGORY:MONITOR",
-        "CATEGORY:PREVIEW",
-        "CATEGORY:TOOL",         // curl, Postman, etc. during dev
-      ],
+  
+     allow: isProduction
+        ? [
+            "CATEGORY:SEARCH_ENGINE",
+            "CATEGORY:MONITOR",
+            "CATEGORY:PREVIEW",
+          ]
+        : [
+            "CATEGORY:SEARCH_ENGINE",
+            "CATEGORY:BROWSER",
+            "CATEGORY:MONITOR",
+            "CATEGORY:PREVIEW",
+            "CATEGORY:TOOL",
+          ],
     }),
     // Create a sliding window rate limit. Other algorithms are supported.
     slidingWindow({

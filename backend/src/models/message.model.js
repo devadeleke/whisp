@@ -22,7 +22,16 @@ const messageSchema = new mongoose.Schema({
         type: String
     },
 
-}, { timestamps: true})
+}, { timestamps: true })
+
+
+//Add schema-level validation to prevent blank messages.
+messageSchema.pre("validate", function (next) {
+    if (!this.text?.trim() || !this.image) {
+        this.invalidate("text", "Message must contain text or image");
+    }
+    next();
+});
 
 const Message = mongoose.model('Message', messageSchema);
 export default Message;
