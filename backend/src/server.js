@@ -3,9 +3,11 @@ import path from 'path';
 import dns from'node:dns';
 import cookieParser from 'cookie-parser';
 
-import authRoutes from './routes/auth.route.js';
 import { connectDB } from './lib/db.js';
 import { ENV } from './lib/env.js';
+
+import authRoutes from './routes/auth.route.js';
+import messageRoute from './routes/message.route.js'
 
 // Set custom DNS servers to avoid potential DNS resolution issues (force Node.js itself to use Google’s DNS servers instead of the system’s default)
 // Only force custom DNS if the environment variable is explicitly set to 'true'
@@ -26,6 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/messages', messageRoute)
 
 // make ready for production
 if (ENV.NODE_ENV === 'production') {
