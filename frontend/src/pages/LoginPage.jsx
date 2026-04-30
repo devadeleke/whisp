@@ -13,12 +13,11 @@ const LoginPage = () => {
 
     // Prevent empty/whitespace signup submissions before API call.
     const payload = {
-      fullname: formData.fullname.trim(),
       email: formData.email.trim(),
       password: formData.password,
     };
 
-    if (!payload.fullname || !payload.email || !payload.password) return;
+    if (!payload.email || !payload.password) return;
     login(payload);
   }
 
@@ -79,7 +78,7 @@ const LoginPage = () => {
               </form>
 
               <div className="mt-6 text-center">
-                <Link to="/login" className="auth-link">
+                <Link to="/signup" className="auth-link">
                   Don't have an account? Signup
                 </Link>
               </div>
