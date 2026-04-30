@@ -30,8 +30,8 @@ export const useAuthStore = create((set) => ({
             toast.success("Signup successful! Welcome to Whisp.")
         } catch (error) {
             console.log("Error in signup", error)
-            toast.error(error.response.data.message)
-            set({authUser: null})
+            const message = error?.response?.data?.message || "Signup failed. Please try again."
+            toast.error(message)
         } finally {
             set({isSigningUp: false})
         }

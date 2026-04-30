@@ -9,7 +9,14 @@ const SignupPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signup(formData)
+    //Prevent empty/whitespace signup submissions before API call.
+    const payload = {
+      fullname: formData.fullname.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+    };
+    if (!payload.fullname || !payload.email || !payload.password) return;
+    signup(payload);
   }
 
   return (
