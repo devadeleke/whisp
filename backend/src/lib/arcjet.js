@@ -3,13 +3,15 @@ import arcjet, { shield, detectBot, slidingWindow } from "@arcjet/node";
 import express from "express";
 import { ENV } from "./env.js";
 
+const isProduction = ENV.ARCJET_ENV === "production";
+
 const aj = arcjet({
   // Get your site key from https://app.arcjet.com and set it as an environment
   // variable rather than hard coding.
   key: ENV.ARCJET_KEY,
   rules: [
     // Shield protects your app from common attacks e.g. SQL injection
-    shield({ mode: "LIVE" }),
+    shield({ mode: isProduction ? "LIVE" : "DRY_RUN",}),
     // Create a bot detection rule
     detectBot({
       //mode: "LIVE", // Blocks requests. Use "DRY_RUN" to log only
